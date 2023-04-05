@@ -20,7 +20,6 @@ Function New-GitRepoDiagram {
     foreach ($branch in ($branches | Sort-Object -Property isMainBranch -Descending)) {
         $name = $branch.name
         $notIncludeTheMainCommits = $name -ne $defaultBranch ? "--not $(git merge-base $defaultBranch $name)" : ""
-        $notIncludeTheMainCommits
         $logs = git log --pretty=format:'{"commit": "%h", "author": "%an", "message": "%s"}' --reverse $name | ConvertFrom-Json
         if ($name -ne $defaultBranch) {
             $mermaidFile += '   branch "$name"'.Replace('$name', $name) + [Environment]::NewLine
@@ -40,3 +39,5 @@ Function New-GitRepoDiagram {
     }
     Write-Host $mermaidFile
 }
+
+New-GitRepoDiagram
